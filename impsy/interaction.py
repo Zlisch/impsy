@@ -163,7 +163,7 @@ class InteractionServer(object):
         self.last_user_interaction_time = time.time()
         self.last_user_interaction_data = np.array([dt, *int_input])
         assert (
-            len(self.last_user_interaction_data) == self.dimension
+            len(self.last_user_interaction_data)-1 == self.dimension
         ), "Input is incorrect dimension, set dimension to %r" % len(
             self.last_user_interaction_data
         )
@@ -310,7 +310,7 @@ class InteractionServer(object):
         rnn_thread = Thread(
             target=self.playback_rnn_loop, name="rnn_player_thread", daemon=True
         )
-        self.websocket_sender.connect()  # TODO verify websockets again.
+        # self.websocket_sender.connect()  # TODO verify websockets again.
 
         # Logging
         if self.config["log"]:

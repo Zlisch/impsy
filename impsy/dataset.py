@@ -7,8 +7,8 @@ import click
 
 
 def transform_log_to_sequence_example(logfile: str, dimension: int):
-    data_names = ["x" + str(i) for i in range(dimension - 1)]
-    column_names = ["date", "source"] + data_names
+    data_names = ["x" + str(i) for i in range(dimension)]
+    column_names = ["source"] + data_names
     perf_df = pd.read_csv(
         logfile, header=None, parse_dates=True, index_col=0, names=column_names
     )
@@ -19,7 +19,8 @@ def transform_log_to_sequence_example(logfile: str, dimension: int):
     perf_df.t = perf_df.t.diff()
     perf_df.t = perf_df.t.dt.total_seconds()
     perf_df = perf_df.dropna()
-    return np.array(perf_df[["t"] + data_names])
+    # return np.array(perf_df[["t"] + data_names])
+    return np.array(perf_df[data_names])
 
 
 def generate_dataset(
@@ -70,7 +71,7 @@ def generate_dataset(
     click.secho(f"total number of interactions: {interactions}", fg="blue")
     click.secho(f"total time represented: {time}", fg="blue")
     click.secho(f"total number of perfs in raw array: {len(raw_perfs)}", fg="blue")
-    raw_perfs = np.array(raw_perfs)
+    raw_perfs = np.array(raw_perfs, dtype=object)
     np.savez_compressed(dataset_location + dataset_filename, perfs=raw_perfs)
     click.secho("done saving: {dataset_location + dataset_filename}", fg="green")
     return dataset_filename

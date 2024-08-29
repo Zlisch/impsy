@@ -325,7 +325,7 @@ class OSCServer(IOServer):
             OSCServer.TIMESCALE_MESSAGE_ADDRESS, self.handle_timescale_message
         )
         self.server = osc_server.ThreadingOSCUDPServer(
-            (config["osc"]["server_ip"], config["osc"]["server_port"]), self.dispatcher
+            (config["osc"]["server_ip"], int(config["osc"]["server_port"])), self.dispatcher
         )
 
     def handle_interface_message(self, address: str, *osc_arguments) -> None:
@@ -351,7 +351,7 @@ class OSCServer(IOServer):
         # TODO: do something with this information...
 
     def connect(self) -> None:
-        print("Preparing Server thread.")
+        print("Preparing OSC Server thread.")
         self.server_thread = Thread(
             target=self.server.serve_forever, name="osc_server_thread", daemon=True
         )
